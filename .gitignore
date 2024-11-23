@@ -23,5 +23,6 @@
 # Abaikan file sistem operasi
 .DS_Store
 Thumbs.
+
 # Abaikan file eksekusi
 main.exe
