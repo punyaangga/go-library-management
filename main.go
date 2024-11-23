@@ -2,6 +2,7 @@ package main
 
 import (
 	"libraryManagement/config"
+	"libraryManagement/models"
 	"libraryManagement/routes"
 	"log"
 
@@ -18,6 +19,8 @@ func main() {
 
 	// Connect to database
 	config.Database()
+	// migrate database
+	config.DB.AutoMigrate(&models.User{})
 
 	// Setup router
 	router := gin.Default()
