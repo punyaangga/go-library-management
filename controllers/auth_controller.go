@@ -3,6 +3,7 @@ package controllers
 import (
 	"libraryManagement/config"
 	"libraryManagement/models"
+	"libraryManagement/utils"
 	"net/http"
 	"os"
 	"time"
@@ -16,24 +17,24 @@ import (
 func Register(c *gin.Context) {
 	var input models.User
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendErrorResponse(c, http.StatusNotFound, "Something when wrong", err)
 		return
 	}
 
 	// Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to hash password", nil)
 		return
 	}
 	input.Password = string(hashedPassword)
 
 	if err := config.DB.Create(&input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to create user", err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
+	utils.SendSuccessResponse(c, http.StatusOK, "User created successfully", nil)
 }
 
 // Login endpoint
@@ -44,18 +45,18 @@ func Login(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendErrorResponse(c, http.StatusBadRequest, "Something when wrong", nil)
 		return
 	}
 
 	var user models.User
 	if err := config.DB.Where("username = ?", input.Username).First(&user).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		utils.SendErrorResponse(c, http.StatusUnauthorized, "Invalid credentials", nil)
 		return
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		utils.SendErrorResponse(c, http.StatusUnauthorized, "Invalid credentials", nil)
 		return
 	}
 
@@ -66,9 +67,8 @@ func Login(c *gin.Context) {
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to generate token", nil)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+	utils.SendSuccessResponse(c, http.StatusOK, "token success created", tokenString)
 }
