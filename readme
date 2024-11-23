@@ -3,3 +3,5 @@ Depedency
 - github.com/golang-jwt/jwt/v5
 - gorm.io/gorm
 - gorm.io/driver/mysql
+- github.com/joho/godotenv
+- github.com/air-verse/air@latest
