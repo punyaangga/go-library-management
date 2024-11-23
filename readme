@@ -4,3 +4,4 @@ Depedency
 - gorm.io/gorm
 - gorm.io/driver/mysql
 - github.com/joho/godotenv
+- github.com/air-verse/air@latest
