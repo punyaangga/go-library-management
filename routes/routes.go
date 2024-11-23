@@ -16,6 +16,7 @@ func SetupRoutes(router *gin.Engine) {
 	protected := router.Group("/api")
 	protected.Use(middlewares.JWTAuthMiddleware())
 	{
+		protected.POST("/category", controllers.AddCategory)
 		protected.GET("/profile", func(c *gin.Context) {
 			username, _ := c.Get("username")
 			c.JSON(200, gin.H{"message": "Hello, " + username.(string)})
