@@ -23,9 +23,39 @@ func AddCategory(c *gin.Context) {
 		return
 	}
 	//response success
-	responseData := models.Category{
+	responseData := models.CategoryResponse{
 		CategoryName: input.CategoryName,
 		Description:  input.Description,
 	}
-	utils.SendSuccessResponse(c, http.StatusOK, "Category added successfully", responseData)
+	utils.SendSuccessResponse(c, http.StatusOK, "Category add successfully", responseData)
+}
+
+func UpdateCategory(c *gin.Context) {
+	var category models.Category
+	var input models.Category
+	categoryID := c.Param("id")
+	// Get data from database
+	if err := config.DB.First(&category, categoryID).Error; err != nil {
+		utils.SendErrorResponse(c, http.StatusNotFound, "Category not found", err)
+		return
+	}
+
+	// Validate input
+	if err := c.ShouldBindJSON(&input); err != nil {
+		utils.SendErrorResponse(c, http.StatusBadRequest, "Invalid input", err)
+		return
+	}
+
+	// Update data in database
+	if err := config.DB.Model(&category).Updates(input).Error; err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to update category", err)
+		return
+	}
+
+	//response success
+	responseData := models.CategoryResponse{
+		CategoryName: input.CategoryName,
+		Description:  input.Description,
+	}
+	utils.SendSuccessResponse(c, http.StatusOK, "Category updated successfully", responseData)
 }

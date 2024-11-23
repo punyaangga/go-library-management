@@ -4,6 +4,11 @@ import "gorm.io/gorm"
 
 type Category struct {
 	gorm.Model
-	CategoryName string `json:categoryName; gorm:"unique;not null"`
-	Description  string `json:description;gorm:"type:text; null"`
+	CategoryName string `json:"CategoryName" binding:"required";gorm:"unique;not null"`
+	Description  string `gorm:"type:text; null"`
+}
+
+type CategoryResponse struct {
+	CategoryName string `json:"CategoryName"`
+	Description  string `json:"Description"`
 }
