@@ -4,9 +4,16 @@ import "github.com/gin-gonic/gin"
 
 // SendErrorResponse mengirimkan respons error
 func SendErrorResponse(c *gin.Context, statusCode int, message string, err error) {
+	var errorDetails interface{}
+	if err != nil {
+		errorDetails = err.Error()
+	} else {
+		errorDetails = nil
+	}
+
 	c.JSON(statusCode, map[string]interface{}{
 		"message": message,
-		"error":   err.Error(),
+		"error":   errorDetails,
 	})
 }
 
