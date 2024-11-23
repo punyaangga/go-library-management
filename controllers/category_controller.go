@@ -3,6 +3,7 @@ package controllers
 import (
 	"libraryManagement/config"
 	"libraryManagement/models"
+	"libraryManagement/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,14 +11,21 @@ import (
 
 func AddCategory(c *gin.Context) {
 	var input models.Category
+	// Validate input
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.SendErrorResponse(c, http.StatusBadRequest, "Invalid input", err)
 		return
 	}
 
+	// save data to database with checking data
 	if err := config.DB.Create(&input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create category"})
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to create category", err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Category Add Successfully"})
+	//response success
+	responseData := models.Category{
+		CategoryName: input.CategoryName,
+		Description:  input.Description,
+	}
+	utils.SendSuccessResponse(c, http.StatusOK, "Category added successfully", responseData)
 }
