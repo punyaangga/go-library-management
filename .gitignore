@@ -1,3 +1,25 @@
-# Ignore environment files
+# Abaikan file environment
 .env
-.env.local
+
+# Abaikan direktori build dan bin
+/build/
+/bin/
+
+# Abaikan file log
+*.log
+
+# Abaikan file cache
+*.cache
+*.tmp
+
+# Abaikan dependency vendor jika menggunakan Go modules
+/vendor/
+
+# Abaikan file editor tertentu
+.vscode/
+.idea/
+*.swp
+
+# Abaikan file sistem operasi
+.DS_Store
+Thumbs.db
