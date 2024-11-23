@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"libraryManagement/config"
 	"libraryManagement/models"
 	"net/http"
 
@@ -13,5 +14,10 @@ func AddCategory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
+
+	if err := config.DB.Create(&input).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create category"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Category Add Successfully"})
 }
