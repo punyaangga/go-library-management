@@ -22,4 +22,7 @@
 
 # Abaikan file sistem operasi
 .DS_Store
-Thumbs.db
+Thumbs.
+
+# Abaikan file eksekusi
+main.exe
