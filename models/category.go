@@ -2,6 +2,7 @@ package models
 
 import "gorm.io/gorm"
 
+// modeling data
 type Category struct {
 	gorm.Model
 	CategoryName string `json:"CategoryName" binding:"required";gorm:"unique;not null"`
