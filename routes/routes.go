@@ -20,5 +20,6 @@ func SetupRoutes(router *gin.Engine) {
 			username, _ := c.Get("username")
 			c.JSON(200, gin.H{"message": "Hello, " + username.(string)})
 		})
+		protected.POST("/logout", controllers.Logout)
 	}
 }

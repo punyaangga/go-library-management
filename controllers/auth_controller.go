@@ -72,3 +72,27 @@ func Login(c *gin.Context) {
 	}
 	utils.SendSuccessResponse(c, http.StatusOK, "token success created", tokenString)
 }
+
+func Logout(c *gin.Context) {
+	// get token from Authorization header
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		utils.SendErrorResponse(c, http.StatusUnauthorized, "Authorization token is required", nil)
+		return
+	}
+
+	// Format token using bearer
+	tokenString := authHeader[len("Bearer "):]
+
+	// Save token to list expired token
+	expiredToken := models.ExpiredToken{
+		Token:     tokenString,
+		CreatedAt: time.Now(),
+	}
+	if err := config.DB.Create(&expiredToken).Error; err != nil {
+		utils.SendErrorResponse(c, http.StatusInternalServerError, "Failed to blacklist token", err)
+		return
+	}
+
+	utils.SendSuccessResponse(c, http.StatusOK, "Logout successful", nil)
+}

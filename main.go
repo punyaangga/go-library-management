@@ -20,7 +20,10 @@ func main() {
 	// Connect to database
 	config.Database()
 	// migrate database
-	config.DB.AutoMigrate(&models.User{})
+	config.DB.AutoMigrate(
+		&models.User{},
+		&models.ExpiredToken{},
+	)
 
 	// Setup router
 	router := gin.Default()

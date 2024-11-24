@@ -1,6 +1,9 @@
 package middlewares
 
 import (
+	"libraryManagement/config"
+	"libraryManagement/models"
+	"libraryManagement/utils"
 	"net/http"
 	"os"
 	"strings"
@@ -14,19 +17,29 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
+			utils.SendErrorResponse(c, http.StatusUnauthorized, "Authorization header is required", nil)
 			c.Abort()
 			return
 		}
 
 		// Parse token
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+		// Check if token is expired
+		var expiredToken models.ExpiredToken
+		if err := config.DB.Where("token = ?", tokenString).First(&expiredToken).Error; err == nil {
+			utils.SendErrorResponse(c, http.StatusUnauthorized, "Token has been revoked", nil)
+			c.Abort()
+			return
+		}
+
+		// Parse and validate token
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
 		})
 
 		if err != nil || !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			utils.SendErrorResponse(c, http.StatusUnauthorized, "Invalid or expired token", nil)
 			c.Abort()
 			return
 		}
