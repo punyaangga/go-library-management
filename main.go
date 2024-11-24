@@ -30,6 +30,9 @@ func main() {
 		log.Fatalf("Error migrating database: %v", err)
 	}
 
+	//migrate data seeder. If you want to seed data, uncomment the line below
+	// seeder.SeederProduct()
+
 	// Setup router
 	router := gin.Default()
 	routes.SetupRoutes(router)
