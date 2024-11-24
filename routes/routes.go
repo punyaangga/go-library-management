@@ -8,11 +8,11 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
-	// Public routes
+	//  Public routes
 	router.POST("/register", controllers.Register)
 	router.POST("/login", controllers.Login)
 
-	// Protected routes
+	//  Protected routes
 	protected := router.Group("/api")
 	protected.Use(middlewares.JWTAuthMiddleware())
 	{

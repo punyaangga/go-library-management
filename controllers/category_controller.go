@@ -11,7 +11,7 @@ import (
 
 func AddCategory(c *gin.Context) {
 	var input models.Category
-	// Validate input
+	//  Validate input
 	if err := c.ShouldBindJSON(&input); err != nil {
 		utils.SendErrorResponse(c, http.StatusBadRequest, "Invalid input", err)
 		return

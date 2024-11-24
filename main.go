@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("Error loading .env file")
 	}
 
-	// Connect to database
+	//  Connect to database
 	config.Database()
 	// migrate database
 	config.DB.AutoMigrate(
