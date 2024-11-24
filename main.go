@@ -22,6 +22,7 @@ func main() {
 	// migrate database
 	config.DB.AutoMigrate(
 		&models.User{},
+		&models.Category{},
 		&models.ExpiredToken{},
 	)
 
