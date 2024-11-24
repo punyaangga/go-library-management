@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"libraryManagement/config"
+
+	"gorm.io/gorm"
+)
 
 type Stock struct {
 	gorm.Model
@@ -12,6 +16,17 @@ type Stock struct {
 
 type StockResponse struct {
 	StockBarcode  string `json:"StockBarcode"`
-	StockQty      string `json:"StockQty"`
+	StockQty      int    `json:"StockQty"`
 	StockLocation string `json:"Description"`
+}
+
+// Method to check if product exists
+func (p *Product) ProductExists(idProduct int) bool {
+
+	var product Product
+	// Try to find the product by id
+	if err := config.DB.First(&product, idProduct).Error; err != nil {
+		return false // Product not found
+	}
+	return true // Product exists
 }

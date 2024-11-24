@@ -10,7 +10,7 @@ type Product struct {
 }
 
 type ProductResponse struct {
-	IdCategory         string `json:"StockBarcode"`
-	NameProduct        string `json:"StockQty"`
-	DesciprtionProduct string `json:"Description"`
+	IdCategory    string `json:"StockBarcode"`
+	NameProduct   string `json:"StockQty"`
+	StockLocation string `json:"Description"`
 }
