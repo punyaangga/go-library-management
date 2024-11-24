@@ -20,11 +20,15 @@ func main() {
 	// Connect to database
 	config.Database()
 	// migrate database
-	config.DB.AutoMigrate(
+	if err := config.DB.AutoMigrate(
 		&models.User{},
 		&models.Category{},
 		&models.ExpiredToken{},
-	)
+		&models.Product{},
+		&models.Stock{},
+	); err != nil {
+		log.Fatalf("Error migrating database: %v", err)
+	}
 
 	// Setup router
 	router := gin.Default()
