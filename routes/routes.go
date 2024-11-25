@@ -18,6 +18,7 @@ func SetupRoutes(router *gin.Engine) {
 	{
 		protected.POST("/stock", controllers.AddStock)
 		protected.PUT("/stock/:id", controllers.UpdateStock)
+		protected.GET("/stock/:id", controllers.GetStocks)
 		protected.GET("/stock", controllers.GetStocks)
 
 		protected.POST("/category", controllers.AddCategory)
