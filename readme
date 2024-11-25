@@ -1,4 +1,6 @@
+
 How To Run :
+- Clone this repository from branch main
 - Install Go
 - Install MySQL
 - change .env.example to .env
