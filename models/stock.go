@@ -41,7 +41,7 @@ func (p *Product) ProductExists(idProduct int) bool {
 }
 
 // method get detail stock one or more data
-func GetStocksWithProducts(db *gorm.DB, id *string) ([]StockWithProductResponse, error) {
+func GetStocksWithProducts(db *gorm.DB, id *string, productName *string) ([]StockWithProductResponse, error) {
 	var stocks []StockWithProductResponse
 	var err error
 
@@ -58,14 +58,28 @@ func GetStocksWithProducts(db *gorm.DB, id *string) ([]StockWithProductResponse,
 		ON a.id_product = b.id
 	`
 
+	// Parameter untuk query
+	var queryParams []interface{}
+
+	// Tambahkan kondisi untuk ID
 	if id != nil && *id != "" {
-		// Tambahkan filter berdasarkan ID jika ID diberikan
 		query += " WHERE a.id = ?"
-		err = db.Raw(query, *id).Scan(&stocks).Error
-	} else {
-		// Tanpa filter ID
-		err = db.Raw(query).Scan(&stocks).Error
+		queryParams = append(queryParams, *id)
 	}
+
+	// Tambahkan kondisi untuk nama produk
+	if productName != nil && *productName != "" {
+		if len(queryParams) > 0 {
+			query += " AND"
+		} else {
+			query += " WHERE"
+		}
+		query += " b.name_product LIKE ?"
+		queryParams = append(queryParams, "%"+*productName+"%")
+	}
+
+	// Eksekusi query
+	err = db.Raw(query, queryParams...).Scan(&stocks).Error
 
 	if err != nil {
 		return nil, err
@@ -75,6 +89,9 @@ func GetStocksWithProducts(db *gorm.DB, id *string) ([]StockWithProductResponse,
 	if len(stocks) == 0 {
 		if id != nil && *id != "" {
 			return nil, errors.New("Stock ID not found")
+		}
+		if productName != nil && *productName != "" {
+			return nil, errors.New("No stocks available for the given product name")
 		}
 		return nil, errors.New("No stocks available")
 	}
