@@ -4,6 +4,7 @@ import (
 	"libraryManagement/config"
 	"libraryManagement/models"
 	"libraryManagement/routes"
+	"libraryManagement/seeder"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	//migrate data seeder. If you want to seed data, uncomment the line below
-	// seeder.SeederProduct()
+	seeder.SeederProduct()
 
 	// Setup router
 	router := gin.Default()

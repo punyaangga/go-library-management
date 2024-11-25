@@ -1,4 +1,13 @@
-Depedency
+How To Run :
+- Install Go
+- Install MySQL
+- change .env.example to .env
+- Can run Using run go run main.go or using air
+
+Docs API :
+- https://documenter.getpostman.com/view/9643334/2sAYBUFDd2
+
+Depedency :
 - github.com/gin-gonic/gin
 - github.com/golang-jwt/jwt/v5
 - gorm.io/gorm
