@@ -70,18 +70,17 @@ func UpdateStock(c *gin.Context) {
 }
 
 func GetStocks(c *gin.Context) {
-	var id *string
-	// get ID form URL
-	idParam := c.Param("id")
-	if idParam != "" {
-		id = &idParam // Save ID to pointer
-	}
+	// Ambil parameter dari query string
+	id := c.Query("id")            // `id` sebagai query parameter
+	productName := c.Query("name") // `name` sebagai query parameter untuk nama produk
 
-	stocks, err := models.GetStocksWithProducts(config.DB, id)
+	// Panggil fungsi model dengan parameter
+	stocks, err := models.GetStocksWithProducts(config.DB, &id, &productName)
 	if err != nil {
 		utils.SendErrorResponse(c, http.StatusNotFound, err.Error(), nil)
 		return
 	}
 
+	// Kirimkan response sukses
 	utils.SendSuccessResponse(c, http.StatusOK, "Stocks retrieved successfully", stocks)
 }
